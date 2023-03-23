@@ -5,20 +5,32 @@ a cura di: Trotti Francesco [703010]
 ## Introduzione
 Il programma esegue quattro fasi principali:  
 * **Creazione Dataset**: nella cartella `Database` è presente il database contenete tutte le retention issues.  
-Il primo passo da fare è scaricare ***MongoDB*** cliccando sul [link](https://www.mongodb.com/try/download/community)  
+Il primo passo da fare è scaricare ***MongoDB*** cliccando sul [link](https://www.mongodb.com/try/download/community).  
 Una volta scaricato bisogna stabilire una connessione (di default: *mongodb://localhost:27017*)  
 Stabilita la connessione bisognerà:  
-  1. Cliccare sul tasto "**+**" alla destra della scritta **Databases**;    
-  2. Inserire il **Database name** e il **Collection name** e poi cliccare il tasto **Create Database**;    
-  3. Andare sulla collezione appena creata e cliccare il tasto **Import Data**;    
-  4. Selezionare il file JSON **DB** presente nella cartella **Database** e cliccare il tasto **JSON**;   
-  5. Cliccare il tasto **Import**;
+  * Cliccare sul tasto "**+**" alla destra della scritta **Databases**;    
+  * Inserire il **Database name** e il **Collection name** e poi cliccare il tasto **Create Database**;    
+  * Andare sulla collezione appena creata e cliccare il tasto **Import Data**;    
+  * Selezionare il file JSON **DB** presente nella cartella **Database** e cliccare il tasto **JSON**;   
+  * Cliccare il tasto **Import**;
 
   Adesso il Database è correttamente importato su **MongoDB**.  
   Ora il programma creerà un dataset contenente l' ***html_url*** e il ***repository_url*** di ciascuna issue presente nel Database appena importato su **MongoDB**.  
   Il dataset in questione è presente nella cartella `Dataset` con il nome di `retention-issue.csv`
 
-* **Fase 2**: 
+* **Estrazione utenti**: In questa fase viene analizzata ciascuna issue presente nel dataset `retention-issue.csv`.  
+L'obbiettivo di questa fase è capire l'utente che ha lavorato alla issue presa in questione e capire se la issue analizzata è la **prima** issue svolta dall'utente in questa **repository**.  
+Quindi per ciascuna issue bisognerà:  
+  * Trovare la **pull request** che chiude l'issue;
+  * Trovare il **proprietario** della **pull request**;  
+  * Trovare tutti i **commit** fatti dall'utente nella **repository**;  
+  * Controllare che il **primo committ** chiuda la **pull request** analizzata;  
+  * Salvare l'**utente** nel caso si verifichi il passo precedente;
+
+  Ciascun utente verrà salvato all'interno del dataset `users.csv`.  
+  Il dataset `users.csv` conterrà in **name** il nome dell'utente e in **html_url** l'url della prima issue svolta nella repository.
+  
+* **Fase 3**
 
 ## Requisiti fondamentali
 Programma realizzato con il linguaggio di programmazione Python. Per eseguire il codice si rchiede un ambiente di sviluppo (ambiente di sviluppo suggerito: Visual Studio Code)  
