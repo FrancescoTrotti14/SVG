@@ -4,8 +4,20 @@ a cura di: Trotti Francesco [703010]
   
 ## Introduzione
 Il programma esegue quattro fasi principali:  
-* **Creazione Dataset**: nella cartella **DB** è presente il database contenete tutte le retention issues.  
-Il primo passo da fare è scaricare ***MongoDB*** cliccando sul [link](https://www.mongodb.com/try/download/community) ;  
+* **Creazione Dataset**: nella cartella `Database` è presente il database contenete tutte le retention issues.  
+Il primo passo da fare è scaricare ***MongoDB*** cliccando sul [link](https://www.mongodb.com/try/download/community)  
+Una volta scaricato bisogna stabilire una connessione (di default: *mongodb://localhost:27017*)  
+Stabilita la connessione bisognerà:  
+  1. Cliccare sul tasto "**+**" alla destra della scritta **Databases**;    
+  2. Inserire il **Database name** e il **Collection name** e poi cliccare il tasto **Create Database**;    
+  3. Andare sulla collezione appena creata e cliccare il tasto **Import Data**;    
+  4. Selezionare il file JSON **DB** presente nella cartella **Database** e cliccare il tasto **JSON**;   
+  5. Cliccare il tasto **Import**;
+
+  Adesso il Database è correttamente importato su **MongoDB**.  
+  Ora il programma creerà un dataset contenente l' ***html_url*** e il ***repository_url*** di ciascuna issue presente nel Database appena importato su **MongoDB**.  
+  Il dataset in questione è presente nella cartella `Dataset` con il nome di `retention-issue.csv`
+
 * **Fase 2**: 
 
 ## Requisiti fondamentali
