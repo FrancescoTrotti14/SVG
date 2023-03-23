@@ -4,7 +4,8 @@ a cura di: Trotti Francesco [703010]
   
 ## Introduzione
 Il programma esegue quattro fasi principali:  
-* **Fase 1**: viene fornito un database contenente le issue etichettate con `E-easy`. Dopo aver inserito il database su ***MongoDB***, il programma si connette al database e crea un dataset contenete `html_url` e `repository_url` di ogni issue. Il dataset in questione è chiamato `easyIssue.csv`;  
+* **Creazione Dataset**: nella cartella **DB** è presente il database contenete tutte le retention issues.  
+Il primo passo da fare è scaricare ***MongoDB*** cliccando sul [link](https://www.mongodb.com/try/download/community) ;  
 * **Fase 2**: 
 
 ## Requisiti fondamentali
