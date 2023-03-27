@@ -82,7 +82,7 @@ Una volta installate le librerie eseguire il file `main.py`.
 
 ## Funzioni utilizzate
 Il programma utilizzerà le seguenti funzioni:  
-- [create_dataset()](#`create_dataset(result, key1, key2)`)
+- [create_dataset()](#create_dataset(result, key1, key2))
 - 
 ### `create_dataset(result, key1, key2)`  
 ### `extract_pr_numbers(html_url, repository)`
