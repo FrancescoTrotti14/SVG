@@ -3,7 +3,7 @@ Progetto per la tesi: **Creazione di un bot per i neo contributori di progetti o
 a cura di: **Trotti Francesco [703010]**  
 
 ## Indice
- - [Introduzione](#Funzioni)
+ - [Introduzione](#Funzioni utilizzate)
   
 ## Presentazione
 Il programma esegue quattro fasi principali:  
@@ -77,7 +77,7 @@ oppure
 `python -m pip install <nome libreria>` sul terminale. 
 Una volta installate le librerie eseguire il file `main.py`.
 
-## Funzioni
+## Funzioni utilizzate
 Il programma utilizzerà le seguenti funzioni:  
 * ciaoooo
 
