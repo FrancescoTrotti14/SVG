@@ -50,6 +50,10 @@ Per creare il dataset `users1.csv` per ciascun utente bisognerà:
     *  Da ciascuna pull request si ricava la **issue** chiusa;
     *  Viene creato un **dizionario** con **id**: *nome utente*, **issues**: *tutte le issue svolte dall'utene*;
     *  Vengono caricati tutti i dizionari nel file `ActiveUsers.json`;  
+    
+  Adesso bisogna creare un file JSON contenente le *labels* di ciascuna issue contenuta nel file `ActiveUsers.json`.  
+  Grazie alla funzione `extract_labels()` si creerà il file `ActiveUsersLabels.json` con **id**: *nome utente*, **labels**: *tutte le etichette delle issue svolte dall'utene*.  
+  I file `ActiveUsers.json` e `ActiveUsersLabels.json` sono presenti nella cartella `FileJSON`
 
 
 
