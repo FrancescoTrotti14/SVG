@@ -86,6 +86,7 @@ Il programma utilizzerà le seguenti funzioni:
 - [extract_pr_numbers](#extract_pr_numbers)
 - [extract_pr_owner](#extract_pr_owner)
 - [extract_commit_information](#extract_commit_information)
+- [extract_single_issue](#extract_single_issue)
 - [extract_prs](#extract_prs)
 - [extract_issue](#extract_issue)
 - [extact_labels](#extact_labels)
@@ -95,6 +96,7 @@ Il programma utilizzerà le seguenti funzioni:
 ### `extract_pr_numbers`
 ### `extract_pr_owner`
 ### `extract_commit_information`
+### `extract_single_issue`
 ### `extract_prs`
 ### `extract_issue`
 ### `extact_labels`
