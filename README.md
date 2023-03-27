@@ -3,7 +3,7 @@ Progetto per la tesi: **Creazione di un bot per i neo contributori di progetti o
 a cura di: **Trotti Francesco [703010]**  
 
 ## Indice
- - [Introduzione](#Funzioni utilizzate)
+ - [Introduzione](#Funzioni-utilizzate)
   
 ## Presentazione
 Il programma esegue quattro fasi principali:  
