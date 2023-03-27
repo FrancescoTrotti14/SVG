@@ -4,6 +4,9 @@ a cura di: **Trotti Francesco [703010]**
 
 ## Indice
  - [Introduzione](#Funzioni-utilizzate)
+ - [Requisiti fondamentali](#Requisiti-fondamentali)
+ - [Presentazione](#Presentazione)
+ - [Funzioni utilizzate](#Funzioni-utilizzate)
   
 ## Presentazione
 Il programma esegue quattro fasi principali:  
