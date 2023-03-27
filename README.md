@@ -7,7 +7,25 @@ a cura di: **Trotti Francesco [703010]**
  - [Requisiti fondamentali](#Requisiti-fondamentali)
  - [Presentazione](#Presentazione)
  - [Funzioni utilizzate](#Funzioni-utilizzate)
-  
+ - [File](#File)
+ 
+ ## Requisiti fondamentali
+Programma realizzato con il linguaggio di programmazione Python. Per eseguire il codice si rchiede un ambiente di sviluppo (ambiente di sviluppo suggerito: Visual Studio Code)  
+Relativamente alle librerie esterne importate, vediamo la necessità di installare sulla macchina:
+* `pandas`: usato per la manipolazione e l’analisi dei dati;
+* `beautifulsoup4`: usato per richiedere la pagina html;
+* `pymongo`: usato per accedere ai database;
+* `pyGithub`: usato per accedere alla informazioni presenti su GitHub;
+* `requests`: usato per creare vari tipi di richieste http;   
+
+Per installare le librerie eseguire il comando  
+`pip install -r requirements.txt`  
+oppure  
+`pip install <nome libreria>` sul terminale.  
+oppure  
+`python -m pip install <nome libreria>` sul terminale. 
+Una volta installate le librerie eseguire il file `main.py`.
+ 
 ## Presentazione
 Il programma esegue quattro fasi principali:  
 * **Creazione Dataset**: nella cartella `Database` è presente il database contenete tutte le retention issues.  
@@ -62,24 +80,6 @@ Per creare il dataset `users1.csv` per ciascun utente bisognerà:
   I file `ActiveUsers.json` e `ActiveUsersLabels.json` sono presenti nella cartella `FileJSON`
 
 
-
-## Requisiti fondamentali
-Programma realizzato con il linguaggio di programmazione Python. Per eseguire il codice si rchiede un ambiente di sviluppo (ambiente di sviluppo suggerito: Visual Studio Code)  
-Relativamente alle librerie esterne importate, vediamo la necessità di installare sulla macchina:
-* `pandas`: usato per la manipolazione e l’analisi dei dati;
-* `beautifulsoup4`: usato per richiedere la pagina html;
-* `pymongo`: usato per accedere ai database;
-* `pyGithub`: usato per accedere alla informazioni presenti su GitHub;
-* `requests`: usato per creare vari tipi di richieste http;   
-
-Per installare le librerie eseguire il comando  
-`pip install -r requirements.txt`  
-oppure  
-`pip install <nome libreria>` sul terminale.  
-oppure  
-`python -m pip install <nome libreria>` sul terminale. 
-Una volta installate le librerie eseguire il file `main.py`.
-
 ## Funzioni utilizzate
 Il programma utilizzerà le seguenti funzioni:  
 - [create_dataset](#create_dataset)
@@ -98,3 +98,17 @@ Il programma utilizzerà le seguenti funzioni:
 ### `extract_prs`
 ### `extract_issue`
 ### `extact_labels`
+
+
+## File
+| Nome File | Quantità |
+|-----------|---------|
+| retentionIssue.csv | 354648 |  
+| users.csv | 11167 |
+| passiveUsers.txt | 9 |
+| users1.csv | 11158 |
+| ActiveUsers.json|  2500  | 
+| ActiveUseresLabels.json |  2500  | 
+
+
+
