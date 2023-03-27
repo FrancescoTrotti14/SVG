@@ -83,11 +83,18 @@ Una volta installate le librerie eseguire il file `main.py`.
 ## Funzioni utilizzate
 Il programma utilizzerà le seguenti funzioni:  
 - [create_dataset](#create_dataset)
-- 
+- [extract_pr_numbers](#extract_pr_numbers)
+- [extract_pr_owner](#extract_pr_owner)
+- [extract_commit_information](#extract_commit_information)
+- [extract_prs](#extract_prs)
+- [extract_issue](#extract_issue)
+- [extact_labels](#extact_labels)
+
+
 ### `create_dataset`  
-### `extract_pr_numbers(html_url, repository)`
-### `extract_pr_owner(pr_number, repository)`
-### `extract_commit_information(pr_owner, pr_number, repository, html)`
-### `extract_prs(html_url, user)`
-### `extract_issue(html_url, users, prs)`
-### `extact_labels(html_url)`
+### `extract_pr_numbers`
+### `extract_pr_owner`
+### `extract_commit_information`
+### `extract_prs`
+### `extract_issue`
+### `extact_labels`
