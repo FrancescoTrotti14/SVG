@@ -668,14 +668,14 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
    
 ## File  
 Il programma è costituito dai seguenti file:
- - [main.py](#main.py)
- - [config.py](#config.py)
- - [function.py](#function.py)
- - [datasetRetentionIssue.py](#datasetRetentionIssue.py)
- - [extractUsers.py](#extractUsers.py)
- - [extractPassiveUsers.py](#extractPassiveUsers.py)
- - [extractActiveUsers.py](#extractActiveUsers.py)
- - [extractActiveUsersLabels.py](#extractActiveUsersLabels.py)  
+ - [main.py](#mainpy)
+ - [config.py](#configpy)
+ - [function.py](#functionpy)
+ - [datasetRetentionIssue.py](#datasetRetentionIssuepy)
+ - [extractUsers.py](#extractUsers-py)
+ - [extractPassiveUsers.py](#extractPassiveUsers-py)
+ - [extractActiveUsers.py](#extractActiveUsers-py)
+ - [extractActiveUsersLabels.py](#extractActiveUsersLabels-py)  
 
 
 ### main.py  
