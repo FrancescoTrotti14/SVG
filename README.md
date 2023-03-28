@@ -672,10 +672,10 @@ Il programma è costituito dai seguenti file:
  - [config.py](#configpy)
  - [function.py](#functionpy)
  - [datasetRetentionIssue.py](#datasetRetentionIssuepy)
- - [extractUsers.py](#extractUsers-py)
- - [extractPassiveUsers.py](#extractPassiveUsers-py)
- - [extractActiveUsers.py](#extractActiveUsers-py)
- - [extractActiveUsersLabels.py](#extractActiveUsersLabels-py)  
+ - [extractUsers.py](#extractUserspy)
+ - [extractPassiveUsers.py](#extractPassiveUserspy)
+ - [extractActiveUsers.py](#extractActiveUserspy)
+ - [extractActiveUsersLabels.py](#extractActiveUsersLabelspy)  
 
 
 ### main.py  
@@ -705,8 +705,7 @@ Il programma è costituito dai seguenti file:
   ```
 ### function.py
 * **Codice**  
-  ```python
-  ```
+  Contiene tutte le funzione descritte in [qui](#funzioni-utilizzate)
 ### datasetRetentionIssue.py  
 * **Codice**  
   ```python
