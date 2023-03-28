@@ -503,7 +503,85 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
 * **Risultato**
 ### `extract_issues`
 * **Parametri**
-* **Codice**
+* **Codice**  
+  Questa funzione estrae le issue associate ai pull request di un repository Github. Il programma prende in input un link HTML per il repository, un access token per autenticarsi su Github, un nome utente e una lista di numeri di pull request.  
+ Il programma scorre i pull request uno alla volta e cerca le issue associate a ciascun pull request. Per ogni pull request, il programma fa una richiesta HTTP per la pagina del pull request su Github e cerca i tag "a" che contengono l'URL delle issue associate al repository. Se il tag contiene un numero di issue, il programma cerca l'oggetto issue corrispondente nel repository e lo aggiunge a una lista di issue. Infine, il programma restituisce la lista delle issue trovate.  
+ Il codice gestisce anche eventuali errori di connessione con Github (ad esempio, se la richiesta HTTP fallisce) e il limite di rate (ossia, il numero di richieste HTTP che si possono fare in un certo periodo di tempo).
+  ```python
+  # Estraiamo il repository dal link HTML fornito come argomento
+    repository = extract_repository(html_url)
+
+    # Inizializziamo una lista vuota per le issue
+    issue_list = []
+
+    # Scandiamo i pull request uno alla volta
+    for pr in prs:
+        # Inizializziamo un ciclo while per gestire eventuali errori di connessione
+        while True:
+            try:
+                # Convertiamo il numero del pull request in un intero
+                pr_number = int(pr)
+                # Creiamo un'istanza di Github, autenticandoci con un access token
+                g = Github(access_token, per_page = 100, retry = 20)
+                # Prendiamo l'oggetto pull request dal repository
+                repo = g.get_repo(repository)
+                pr = repo.get_pull(pr_number)
+
+                # Se l'autore del pull request è l'utente specificato
+                if pr.user.login == user :
+
+                    # Costruiamo l'URL della pagina del pull request su Github
+                    html_url = "https://github.com/" + repository +"/pull/" + str(pr_number)
+                    # Facciamo una richiesta HTTP per la pagina del pull request
+                    response = requests.get(html_url)
+
+                    # Inizializziamo una variabile per il numero della issue
+                    issue_number = 0
+
+                    # Verifichiamo che la richiesta HTTP sia andata a buon fine
+                    response.raise_for_status()
+                    # Analizziamo il contenuto HTML della pagina del pull request con BeautifulSoup
+                    soup = BeautifulSoup(response.text, 'html.parser')
+                    # Estraiamo parte dell'URL delle issue dal repository
+                    url = "https://github.com/" + repository + "/issues"
+                    # Troviamo tutti i tag "a" nella pagina HTML
+                    tags = soup.find_all("a")
+                    for tag in tags:
+                        link = str(tag.get('href'))
+                        if url in link:
+                            # Estraiamo il numero della issue, che si trova dopo il cancelletto nella stringa del tag
+                            number_string = tag.string
+                            if (number_string):
+                                if (number_string[0] == '#'):                        
+                                    issue_number = int(number_string[1:])
+                                    # Prendiamo l'oggetto issue dal repository e lo aggiungiamo alla lista delle issue
+                                    issue = repo.get_issue(issue_number)
+                                    issue_list.append(issue.html_url)
+                                    break                                    
+            # Gestiamo eventuali errori di connessione
+            except RateLimitExceededException as e:
+                print(e.status)
+                print('Rate limit exceeded')
+                time.sleep(300)
+                continue
+            except requests.exceptions.ConnectionError as e:
+                print('Retries limit exceeded')
+                print(str(e))
+                time.sleep(10)
+                continue
+            except requests.exceptions.Timeout as e:
+                print(str(e))
+                print('Time out exception')
+                time.sleep(10)
+                continue
+            except:
+                break
+            # Se tutto va bene, usciamo dal ciclo while
+            break
+
+    # Restituiamo la lista delle issue
+    return(issue_list)
+  ```
 * **Risultato**
 ### `extact_labels`
 * **Parametri**
