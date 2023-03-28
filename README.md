@@ -101,26 +101,29 @@ Il programma utilizzerà le seguenti funzioni:
   * `key1`: *html_url*
   * `key2`: *repository_url*
 * **Codice**  
- Creo un nuovo DataFrame vuoto e lo assegno alla variabile `df_project`  
-   ```python
-    df_project = pd.DataFrame() 
-    ```  
-    Trovo, se presenti, *html_url* e *repository_url* per ogni elemento del database  
-    ```python
+ Questa funzione crea un DataFrame vuoto chiamato `df_project`.  
+ Successivamente, per ogni elemento user presente nella lista `result`, controlla se contiene due chiavi, `key1` e `key2`. Se entrambe le chiavi sono presenti, il codice aggiunge una nuova riga al DataFrame `df_project` con i valori dell'URL HTML e dell'URL del repository estratti dalla lista user.  
+ Infine, il DataFrame viene esportato in un file CSV chiamato `retentionIssues.csv`, utilizzando la funzione `to_csv()` di Pandas.  
+  ```python
+  # Crea un DataFrame vuoto chiamato df_project
+    df_project = pd.DataFrame()
+
+    # Per ogni elemento user presente nella lista result, controlla se contiene le chiavi key1 e key2
     for user in result:
         if (key1 in user and key2 in user):
+            # Aggiunge una nuova riga al DataFrame df_project con i valori dell'URL HTML e dell'URL del repository estratti dalla lista user
             df_project = df_project.append({
                 'html_url': user.__getitem__("html_url"),
                 'repository_url': user.__getitem__("repository_url")
-            }, ignore_index = True) 
-     ```
-   Inserisco nel dataset `retentionIssue.csv`    
-   ```python
-   df_project.to_csv('Dataset/retentionIssues.csv', sep=',', encoding='utf-8', index=False) 
-   ```  
+            }, ignore_index = True)
+
+    # Esporta il DataFrame in un file CSV chiamato retentionIssues.csv
+    # La funzione to_csv() di Pandas viene utilizzata per questo scopo
+    df_project.to_csv('Dataset/retentionIssues.csv', sep=',', encoding='utf-8', index=False)
+  ```
 * **Risultato**  
-   Dataset `retentionIssue.csv`
-      
+   Dataset `retentionIssue.csv`  
+        
 ### `extract_pr_numbers`  
 * **Parametri**
   * `html_url` : url della issue
@@ -160,9 +163,12 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
   return pr_number
   ```
  * **Risultato**  
-  Variabile `pr_number` contente il numero della pull request che chiude la issue.
+  Variabile `pr_number` contente il numero della pull request che chiude la issue.  
+    
 ### `extract_pr_owner`  
 * **Parametri**
+  * `pr_number` : numero della pull request
+  * `repository` : nome completo della repository
 * **Codice**  
   La funzione cerca di recuperare l'autore di una pull request su Github, a partire dal numero di tale pull request (`pr_number`) e dal nome del repository (`repository`), utilizzando la libreria `PyGithub`.  
   La funzione inizia un ciclo **while** infinito per effettuare la richiesta di recupero dell'autore della pull request tramite la creazione di un'istanza dell'oggetto `Github` utilizzando il token di accesso fornito (`access_token`).  
@@ -227,8 +233,15 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
 
    ```
 * **Risultato**  
+ Variabile `pr_owner` contenete il proprietario della pull request.  
+   
+   
 ### `extract_commit_information`  
 * **Parametri**
+  * `pr_owner` : proprietario della pull request
+  * `pr_number`: numero della pull request
+  * `repository`: nome completo della repository
+  * `html_url`: URL della issue
 * **Codice**  
  Il codice ha lo scopo di verificare se una particolare Pull Request su GitHub è stato chiuso tramite un commit dell'autore della pull request.  
  Viene prima costruito l'URL del commit da controllare, quindi viene effettuata una richiesta HTTP alla pagina del commit e si cerca un link nella pagina che corrisponde all'URL della pull request in questione.  
@@ -323,13 +336,17 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
           continue
       break
    ```
-* **Risultato**
+* **Risultato**  
+ Dataset `user.csv` contenente il nome degli utenti che hanno svolto la issue del database come prima issue nel repository e l'URL della issue.  
+   
 ### `extract_single_issue`
-* **Parametri**
+* **Parametri**  
+  * `html_url` : URL della issue
+  * `user` : username di chi ha svolta la issue
 * **Codice**  
  Questa funzione si occupa di verificare se un utente Github ha effettivamente contribuito ad una pull request specifica.  
  In dettaglio, il codice estrae il nome del repository e il numero di PR dall'url fornito, accede al repository e alla PR specificati, ottiene tutti i commit associati alla PR e quelli associati all'utente specificato, e confronta questi ultimi per verificare se l'utente ha effettivamente contribuito alla PR.  
- Se la verifica è positiva, il nome dell'utente viene scritto su un file di testo.  
+ Se la verifica è positiva, il nome dell'utente viene scritto sul file di testo `passiveUsers.txt`.  
  In caso di errori (come limite di rate o problemi di connessione), il codice gestisce questi errori e riprova dopo un certo intervallo di tempo.
   ```python
    # inizializza due insiemi vuoti
@@ -418,9 +435,13 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
         # interrompi il loop
         break
   ```
-* **Risultato**
+* **Risultato**  
+ File di testo `passiveUsers.txt` contenente l'username degli utenti che hanno svolto una sola issue nella repository.  
+   
 ### `extract_prs`
-* **Parametri**
+* **Parametri**  
+  * `html_url` : URL della issue
+  * `user` : username di chi ha svolta la issue 
 * **Codice**  
  Questa funzione estrae il nome del repository dall'url fornito e si connette all'API di Github con un access token specifico.  
  Successivamente, il codice recupera tutti i commit effettuati dall'utente nel repository e per ognuno di essi estrae il messaggio di commit.  
@@ -500,9 +521,14 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
     # Restituisco la lista di numeri di PR trovate
     return(prs)
   ```
-* **Risultato**
+* **Risultato**  
+ Lista `prs` contente i numeri di tutte le pull request di cui l'utente `user` ne è proprietario.  
+   
 ### `extract_issues`
 * **Parametri**
+  * `html_url` : URL della issue
+  * `user` : username di chi ha svolta la issue
+  * `prs` : lista contente i numeri di tutte le pull request di cui l'utente `user` ne è proprietario. 
 * **Codice**  
   Questa funzione estrae le issue associate ai pull request di un repository Github. Il programma prende in input un link HTML per il repository, un access token per autenticarsi su Github, un nome utente e una lista di numeri di pull request.  
  Il programma scorre i pull request uno alla volta e cerca le issue associate a ciascun pull request. Per ogni pull request, il programma fa una richiesta HTTP per la pagina del pull request su Github e cerca i tag "a" che contengono l'URL delle issue associate al repository. Se il tag contiene un numero di issue, il programma cerca l'oggetto issue corrispondente nel repository e lo aggiunge a una lista di issue. Infine, il programma restituisce la lista delle issue trovate.  
@@ -582,9 +608,12 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
     # Restituiamo la lista delle issue
     return(issue_list)
   ```
-* **Risultato**
+* **Risultato**  
+ Lista `issue_list` contente l'URL di tutte le issue fatte da `user`.  
+     
 ### `extact_labels`
 * **Parametri**
+  * `html_url`: URL della issue 
 * **Codice**  
  Questa funzione restituisce le etichette associate a una specifica issue di un repository Github. Il programma prende in input un link HTML per il repository, un access token per autenticarsi su Github e il numero della issue.  
  Il programma cerca l'oggetto issue corrispondente alla specifica issue nel repository e ne restituisce le etichette. Gli eventuali errori (come il limite di rate o problemi di connessione) vengono gestiti attraverso un blocco try-except, in modo che il programma non si interrompa in caso di errori.  
@@ -633,8 +662,9 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
        break
 
    ```
-* **Risultato**
-
+* **Risultato**  
+ Lista `labels` contenete le etichette di tutte le issue fatte da `user`.  
+   
 
 ## File
 | **Nome File** | **Quantità** |
