@@ -100,14 +100,27 @@ Il programma utilizzerà le seguenti funzioni:
   * `result`: prende dal database solo i campi *html_url* e *repository_url*;
   * `key1`: *html_url*
   * `key2`: *repository_url*
-* **Codice**
-  * `df_project = pd.DataFrame()` : crea un DataFrame vuoto e lo assegna alla variabile `df_project`
-  * ``` for user in result:
-         if (key1 in user and key2 in user):
+* **Codice**  
+ Creo un nuovo DataFrame vuoto e lo assegno alla variabile `df_project`  
+   ```python
+    df_project = pd.DataFrame() 
+    ```  
+    Trovo, se presenti, *html_url* e *repository_url* per ogni elemento del database  
+    ```python
+    for user in result:
+        if (key1 in user and key2 in user):
             df_project = df_project.append({
                 'html_url': user.__getitem__("html_url"),
                 'repository_url': user.__getitem__("repository_url")
-            }, ignore_index = True) ```
+            }, ignore_index = True) 
+     ```
+   Inserisco nel dataset `retentionIssue.csv`    
+   ```python
+   df_project.to_csv('Dataset/retentionIssues.csv', sep=',', encoding='utf-8', index=False) 
+   ```  
+* **Risultato**  
+   Dataset `retentionIssue.csv`
+      
 ### `extract_pr_numbers`
 ### `extract_pr_owner`
 ### `extract_commit_information`
