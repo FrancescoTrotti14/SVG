@@ -229,7 +229,100 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
 * **Risultato**  
 ### `extract_commit_information`  
 * **Parametri**
-* **Codice**
+* **Codice**  
+ Il codice ha lo scopo di verificare se una particolare Pull Request su GitHub è stato chiuso tramite un commit dell'autore della pull request.  
+ Viene prima costruito l'URL del commit da controllare, quindi viene effettuata una richiesta HTTP alla pagina del commit e si cerca un link nella pagina che corrisponde all'URL della pull request in questione.  
+ Se il link viene trovato, si aggiunge l'autore della pull request ad un file CSV.  
+ In caso di errori (come limite di rate o problemi di connessione), il codice gestisce questi errori e riprova dopo un certo intervallo di tempo.  
+  ```python
+  #creazione URL della pull request
+  url = "https://github.com/" + repository + "/pull/" + str(pr_number)
+  #Inizializzazione lista vuota che conterrà le date dei commit
+  data_list = []
+  #Ciclo while infinito
+  while True:
+      try:
+          # Creazione oggetto Github con access token e impostazioni di pagina e ritentativi
+          g = Github(access_token, per_page = 100, retry = 20)
+          # Ottenimento repository specifico tramite nome
+          repo = g.get_repo(repository)
+          # Ottenimento di tutti i commit dell'autore specificato nella Pull Request
+          all_commits = repo.get_commits(author=pr_owner)
+          # Ciclo for per inserire le date dei commit nella lista
+          for commit in all_commits:
+              data_commit = commit.commit.author.date
+              data_list.append(data_commit)
+
+          # Controllo che la lista contenga almeno un elemento
+          if (len(data_list) > 0):
+              # Estrazione della data del primo commit
+              data_first_commit = data_list[-1]
+
+              # Ciclo for sui commit dell'autore
+              for commit in all_commits:
+                  # Controllo se la data del commit è uguale alla data del primo commit
+                  if commit.commit.author.date == data_first_commit:
+                      # Creazione dell'URL della pagina del commit tramite l'identità del commit
+                      html_url = "https://github.com/" + repository + "/commit/" + commit._identity
+                      # Richiesta GET all'URL del commit
+                      response = requests.get(html_url)
+                      response.raise_for_status()
+                      # Parsing della risposta con BeautifulSoup
+                      soup = BeautifulSoup(response.text, 'html.parser')
+                      # Estrazione di tutti i tag "a" presenti nella pagina del commit
+                      tags = soup.find_all("a")
+
+                      # Ciclo for sui tag "a"
+                      for tag in tags:
+                          # Estrazione del valore dell'attributo href
+                          link = str(tag.get('href'))
+                          # Controllo se l'URL della Pull Request corrisponde all'URL presente nel tag "a"
+                          if url == link:
+                              # Lettura del file CSV contenente i dati degli utenti e creazione di un DataFrame
+                              df_project = pd.read_csv('Dataset/users.csv')
+                              # Aggiunta delle informazioni dell'autore al DataFrame
+                              df_project = df_project.append({
+                                  'name' : pr_owner,
+                                  'html_url':html
+                              },ignore_index = True)
+                              # Scrittura del DataFrame nel file CSV
+                              df_project.to_csv('Dataset/users.csv', encoding='utf-8', index=False)
+                              # Uscita dal ciclo for sui tag "a"
+                              break
+      #Gestione delle eccezioni
+      except RateLimitExceededException as e:
+          print(e.status)
+          print('Rate limit exceeded')
+          time.sleep(300)
+          continue
+      except BadCredentialsException as e:
+          print(e.status)
+          print('Bad credentials exception')
+          break
+      except UnknownObjectException as e:
+          print(e.status)
+          print('Unknown object exception')
+          break
+      except GithubException as e:
+          print(e.status)
+          print('General exception')
+          break
+      except UnboundLocalError as e:
+          print(e.status)
+          print('UnboundLocalError')
+          break
+      except requests.exceptions.ConnectionError as e:
+          print('Retries limit exceeded')
+          print(str(e))
+          time.sleep(10)
+          continue
+      except requests.exceptions.Timeout as e:
+          print(str(e))
+          print('Time out exception')
+          time.sleep(10)
+          continue
+      break
+  ```
 * **Risultato**
 ### `extract_single_issue`
 * **Parametri**
