@@ -168,7 +168,7 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
   La funzione inizia un ciclo **while** infinito per effettuare la richiesta di recupero dell'autore della pull request tramite la creazione di un'istanza dell'oggetto `Github` utilizzando il token di accesso fornito (`access_token`).  
   Se la chiamata alle API di Github è andata a buon fine, esce dal ciclo **while** e restituisce il login dell'autore della pull request recuperato (`pr_owner`).  
   Se si verifica un'eccezione durante la richiesta, la funzione gestisce l'eccezione e ripete il ciclo **while** per effettuare un nuovo tentativo di recupero dell'autore della pull request.  
-  ```python
+    ```python
   pr_owner = 0  # Inizializza la variabile 'pr_owner' a 0
 
   # Inizia un ciclo while infinito per recuperare l'autore della pull request
@@ -225,7 +225,7 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
   # Restituisce il valore dell'autore della pull request recuperato
   return pr_owner
 
-  ```
+   ```
 * **Risultato**  
 ### `extract_commit_information`  
 * **Parametri**
@@ -322,11 +322,102 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
           time.sleep(10)
           continue
       break
-  ```
+   ```
 * **Risultato**
 ### `extract_single_issue`
 * **Parametri**
-* **Codice**
+* **Codice**  
+ Questa funzione si occupa di verificare se un utente Github ha effettivamente contribuito ad una pull request specifica.  
+ In dettaglio, il codice estrae il nome del repository e il numero di PR dall'url fornito, accede al repository e alla PR specificati, ottiene tutti i commit associati alla PR e quelli associati all'utente specificato, e confronta questi ultimi per verificare se l'utente ha effettivamente contribuito alla PR.  
+ Se la verifica è positiva, il nome dell'utente viene scritto su un file di testo.  
+ In caso di errori (come limite di rate o problemi di connessione), il codice gestisce questi errori e riprova dopo un certo intervallo di tempo.
+  ```python
+   # inizializza due insiemi vuoti
+    list1 = set()
+    list2 = set()
+
+    # estrai il nome del repository e il numero di PR dall'html_url
+    repository = extract_repository(html_url)
+    number = extract_number(html_url)
+
+    # continua il loop finché il codice all'interno del loop non viene interrotto
+    while True:
+        try:
+            # autentica con Github usando l'access token e imposta la dimensione della pagina e il numero di tentativi di riprova
+            g = Github(access_token, per_page=100, retry=20)
+
+            # ottieni il repository specificato dal nome
+            repo = g.get_repo(repository)
+
+            # estrai il numero della PR dall'url
+            pr_number = extract_pr_numbers(html_url, repository) 
+
+            # ottieni la PR specificata dal numero e dal repository
+            pr = repo.get_pull(number=pr_number)
+
+            # ottieni tutti i commit associati alla PR
+            commit_pr = pr.get_commits()
+
+            # inizializza un contatore
+            count = 0
+
+            # per ogni commit, controlla se l'autore è l'utente specificato e aggiungi l'url del commit all'insieme lista1
+            for commit in commit_pr:
+                if (commit.author is not None):
+                    if (commit.author.login == user):
+                        count += 1
+                        list1.add(commit.html_url)
+
+            # ottieni tutti i commit associati all'utente specificato e conta il loro numero
+            all_commits = repo.get_commits(author=user)
+            number = all_commits.totalCount
+
+            # per ogni commit, aggiungi l'url del commit all'insieme lista2
+            for c in all_commits:
+                list2.add(c.html_url)
+
+            # se il numero di commit associati all'utente specificato corrisponde al numero di commit associati alla PR e l'insieme lista1 è uguale all'insieme lista2, scrivi il nome dell'utente su un file di testo
+            if (count == number and list1 == list2):
+                f = open("Dataset/passiveUsers.txt", "a+")
+                f.write(user + "\n") 
+                f.close()
+                
+        # gestisci eventuali eccezioni
+        except RateLimitExceededException as e:
+            print(e.status)
+            print('Limite di velocità superato')
+            time.sleep(300)
+            continue
+        except BadCredentialsException as e:
+            print(e.status)
+            print('Eccezione credenziali errate')
+            break
+        except UnknownObjectException as e:
+            print(e.status)
+            print('Eccezione oggetto sconosciuto')
+            break
+        except GithubException as e:
+            print(e.status)
+            print('Eccezione generale')
+            break
+        except UnboundLocalError as e:
+            print(e.status)
+            print('Errore di variabile non associata')
+            break
+        except requests.exceptions.ConnectionError as e:
+            print('Limite di riprova superato')
+            print(str(e))
+            time.sleep(10)
+            continue
+        except requests.exceptions.Timeout as e:
+            print(str(e))
+            print('Eccezione timeout')
+            time.sleep(10)
+            continue
+        
+        # interrompi il loop
+        break
+  ```
 * **Risultato**
 ### `extract_prs`
 * **Parametri**
