@@ -421,7 +421,85 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
 * **Risultato**
 ### `extract_prs`
 * **Parametri**
-* **Codice**
+* **Codice**  
+ Questa funzione estrae il nome del repository dall'url fornito e si connette all'API di Github con un access token specifico.  
+ Successivamente, il codice recupera tutti i commit effettuati dall'utente nel repository e per ognuno di essi estrae il messaggio di commit.  
+ Se nel messaggio di commit è presente una stringa nel formato "#numero", dove "numero" è un intero, il codice aggiunge il valore di "numero" ad una lista di PR trovate.  
+ Infine, il codice gestisce alcune eccezioni che potrebbero essere sollevate durante l'accesso a Github, come il limite di velocità superato, le credenziali errate, oggetti sconosciuti, ecc.  
+ Il risultato dell'esecuzione del codice è una lista di interi, dove ogni intero rappresenta il numero di una PR a cui l'utente ha contribuito.  
+  ```python
+  # Estraggo il nome del repository dall'url
+    repository = extract_repository(html_url)
+    
+    # Creo due liste vuote per memorizzare i commit e le PR
+    commit_list = []
+    prs = []
+    
+    # Inizio un loop infinito per gestire le eccezioni
+    while True:
+        try:
+            # Creo un'istanza dell'API di Github
+            g = Github(access_token, per_page=100, retry=20)
+            
+            # Recupero il repository corrispondente al nome
+            repo = g.get_repo(repository)
+            
+            # Recupero tutti i commit effettuati dall'utente nel repository
+            all_commits = repo.get_commits(author=user)
+            
+            # Per ogni commit, estraggo il suo hash
+            for c in all_commits:
+                commit_list.append(c.sha)
+            
+            # Inverto l'ordine della lista dei commit, così da analizzare prima quelli più vecchi
+            commit_list.reverse()
+            
+            # Per ogni commit, estraggo i numeri delle PR a cui il commit si riferisce
+            for sha in commit_list:
+                commit = repo.get_commit(sha)
+                message = commit.commit.message
+                pattern = r'#\d+' # Espressione regolare per cercare stringhe nel formato "#numero"
+                matches = re.findall(pattern, message)
+                for match in matches:
+                    prs.append(match[1:]) # Aggiungo solo il numero alla lista di PR
+            
+        # Gestisco le possibili eccezioni sollevate durante la connessione a Github
+        except RateLimitExceededException as e:
+            print(e.status)
+            print('Rate limit exceeded')
+            time.sleep(300) # Attendo 5 minuti prima di riprovare
+            continue
+        except BadCredentialsException as e:
+            print(e.status)
+            print('Bad credentials exception')
+            break
+        except UnknownObjectException as e:
+            print(e.status)
+            print('Unknown object exception')
+            break
+        except GithubException as e:
+            print(e.status)
+            print('General exception')
+            break
+        except UnboundLocalError as e:
+            print(e.status)
+            print('UnboundLocalError')
+            break
+        except requests.exceptions.ConnectionError as e:
+            print('Retries limit exceeded')
+            print(str(e))
+            time.sleep(10) # Attendo 10 secondi prima di riprovare
+            continue
+        except requests.exceptions.Timeout as e:
+            print(str(e))
+            print('Time out exception')
+            time.sleep(10) # Attendo 10 secondi prima di riprovare
+            continue
+        break
+    
+    # Restituisco la lista di numeri di PR trovate
+    return(prs)
+  ```
 * **Risultato**
 ### `extract_issue`
 * **Parametri**
