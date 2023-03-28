@@ -91,7 +91,7 @@ Il programma utilizzerà le seguenti funzioni:
 - [extract_commit_information](#extract_commit_information)
 - [extract_single_issue](#extract_single_issue)
 - [extract_prs](#extract_prs)
-- [extract_issue](#extract_issue)
+- [extract_issues](#extract_issues)
 - [extact_labels](#extact_labels)
 
 
@@ -501,7 +501,7 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
     return(prs)
   ```
 * **Risultato**
-### `extract_issue`
+### `extract_issues`
 * **Parametri**
 * **Codice**
 * **Risultato**
