@@ -585,7 +585,54 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
 * **Risultato**
 ### `extact_labels`
 * **Parametri**
-* **Codice**
+* **Codice**  
+ Questa funzione restituisce le etichette associate a una specifica issue di un repository Github. Il programma prende in input un link HTML per il repository, un access token per autenticarsi su Github e il numero della issue.  
+ Il programma cerca l'oggetto issue corrispondente alla specifica issue nel repository e ne restituisce le etichette. Gli eventuali errori (come il limite di rate o problemi di connessione) vengono gestiti attraverso un blocco try-except, in modo che il programma non si interrompa in caso di errori.  
+   ```python
+   repository = extract_repository(html_url)  # estrae il nome del repository dal link HTML
+   number = extract_number(html_url)  # estrae il numero dell'issue dal link HTML
+
+   while True:
+       try:
+           g = Github(access_token, per_page=100, retry=20)  # si connette a Github con le credenziali fornite
+           repo = g.get_repo(repository)  # prende il repository specificato
+           issue = repo.get_issue(number=number)  # cerca l'oggetto issue corrispondente al numero specificato
+           labels = str(issue.labels)  # estrae le etichette associate all'issue
+           return labels  # restituisce le etichette
+       except RateLimitExceededException as e:
+           print(e.status)
+           print('Rate limit exceeded')
+           time.sleep(300)
+           continue
+       except BadCredentialsException as e:
+           print(e.status)
+           print('Bad credentials exception')
+           break
+       except UnknownObjectException as e:
+           print(e.status)
+           print('Unknown object exception')
+           break
+       except GithubException as e:
+           print(e.status)
+           print('General exception')
+           break
+       except UnboundLocalError as e:
+           print(e.status)
+           print('UnboundLocalError')
+           break
+       except requests.exceptions.ConnectionError as e:
+           print('Retries limit exceeded')
+           print(str(e))
+           time.sleep(10)
+           continue
+       except requests.exceptions.Timeout as e:
+           print(str(e))
+           print('Time out exception')
+           time.sleep(10)
+           continue
+       break
+
+   ```
 * **Risultato**
 
 
