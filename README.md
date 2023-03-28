@@ -227,11 +227,26 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
 
   ```
 * **Risultato**  
-### `extract_commit_information`
+### `extract_commit_information`  
+* **Parametri**
+* **Codice**
+* **Risultato**
 ### `extract_single_issue`
+* **Parametri**
+* **Codice**
+* **Risultato**
 ### `extract_prs`
+* **Parametri**
+* **Codice**
+* **Risultato**
 ### `extract_issue`
+* **Parametri**
+* **Codice**
+* **Risultato**
 ### `extact_labels`
+* **Parametri**
+* **Codice**
+* **Risultato**
 
 
 ## File
