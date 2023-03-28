@@ -3,13 +3,16 @@ Progetto per la tesi: **Creazione di un bot per i neo contributori di progetti o
 a cura di: **Trotti Francesco [703010]**  
 
 ## Indice
- - [Introduzione](#Funzioni-utilizzate)
+ - [Introduzione](#Introduzione)
  - [Requisiti fondamentali](#Requisiti-fondamentali)
  - [Presentazione](#Presentazione)
  - [Funzioni utilizzate](#Funzioni-utilizzate)
  - [File](#File)
  
- ## Requisiti fondamentali
+## Introduzione
+L'obbiettivo di questo programma è quello di 
+ 
+## Requisiti fondamentali
 Programma realizzato con il linguaggio di programmazione Python. Per eseguire il codice si rchiede un ambiente di sviluppo (ambiente di sviluppo suggerito: Visual Studio Code)  
 Relativamente alle librerie esterne importate, vediamo la necessità di installare sulla macchina:
 * `pandas`: usato per la manipolazione e l’analisi dei dati;
@@ -93,6 +96,18 @@ Il programma utilizzerà le seguenti funzioni:
 
 
 ### `create_dataset`  
+* **Parametri**
+  * `result`: prende dal database solo i campi *html_url* e *repository_url*;
+  * `key1`: *html_url*
+  * `key2`: *repository_url*
+* **Codice**
+  * `df_project = pd.DataFrame()` : crea un DataFrame vuoto e lo assegna alla variabile `df_project`
+  * ``` for user in result:
+         if (key1 in user and key2 in user):
+            df_project = df_project.append({
+                'html_url': user.__getitem__("html_url"),
+                'repository_url': user.__getitem__("repository_url")
+            }, ignore_index = True) ```
 ### `extract_pr_numbers`
 ### `extract_pr_owner`
 ### `extract_commit_information`
@@ -109,8 +124,8 @@ Il programma utilizzerà le seguenti funzioni:
 | users.csv | 11167 |
 | passiveUsers.txt | 9 |
 | users1.csv | 11158 |
-| ActiveUsers.json|  2500  | 
-| ActiveUseresLabels.json |  2500  | 
+| ActiveUsers.json|  2593  | 
+| ActiveUseresLabels.json |  2593  | 
 
 
 
