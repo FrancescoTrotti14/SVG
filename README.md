@@ -161,7 +161,72 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
   ```
  * **Risultato**  
   Variabile `pr_number` contente il numero della pull request che chiude la issue.
-### `extract_pr_owner`
+### `extract_pr_owner`  
+* **Parametri**
+* **Codice**  
+  La funzione cerca di recuperare l'autore di una pull request su Github, a partire dal numero di tale pull request (`pr_number`) e dal nome del repository (`repository`), utilizzando la libreria `PyGithub`.  
+  La funzione inizia un ciclo **while** infinito per effettuare la richiesta di recupero dell'autore della pull request tramite la creazione di un'istanza dell'oggetto `Github` utilizzando il token di accesso fornito (`access_token`).  
+  Se la chiamata alle API di Github è andata a buon fine, esce dal ciclo **while** e restituisce il login dell'autore della pull request recuperato (`pr_owner`).  
+  Se si verifica un'eccezione durante la richiesta, la funzione gestisce l'eccezione e ripete il ciclo **while** per effettuare un nuovo tentativo di recupero dell'autore della pull request.  
+  ```python
+  pr_owner = 0  # Inizializza la variabile 'pr_owner' a 0
+
+  # Inizia un ciclo while infinito per recuperare l'autore della pull request
+  while True:
+    try:
+        # Crea un oggetto 'Github' con il token di accesso fornito
+        g = Github(access_token, per_page=100, retry=20)
+
+        # Recupera l'oggetto 'Repository' corrispondente al nome fornito
+        repo = g.get_repo(repository)
+
+        # Recupera l'oggetto 'PullRequest' corrispondente al numero fornito
+        pr = repo.get_pull(number=pr_number)
+
+        # Recupera il login dell'autore della pull request
+        pr_owner = pr.user.login
+
+    # Gestisce possibili eccezioni che possono verificarsi durante il recupero dei dati
+    except RateLimitExceededException as e:
+        print(e.status)
+        print('Rate limit exceeded')
+        time.sleep(300)
+        continue
+    except BadCredentialsException as e:
+        print(e.status)
+        print('Bad credentials exception')
+        break
+    except UnknownObjectException as e:
+        print(e.status)
+        print('Unknown object exception')
+        break
+    except GithubException as e:
+        print(e.status)
+        print('General exception')
+        break
+    except UnboundLocalError as e:
+        print(e.status)
+        print('UnboundLocalError')
+        break
+    except requests.exceptions.ConnectionError as e:
+        print('Retries limit exceeded')
+        print(str(e))
+        time.sleep(10)
+        continue
+    except requests.exceptions.Timeout as e:
+        print(str(e))
+        print('Time out exception')
+        time.sleep(10)
+        continue
+
+    # Se la chiamata alle API di Github è andata a buon fine, esce dal ciclo while
+    break
+
+  # Restituisce il valore dell'autore della pull request recuperato
+  return pr_owner
+
+  ```
+* **Risultato**  
 ### `extract_commit_information`
 ### `extract_single_issue`
 ### `extract_prs`
