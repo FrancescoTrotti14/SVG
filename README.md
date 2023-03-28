@@ -8,6 +8,7 @@ a cura di: **Trotti Francesco [703010]**
  - [Presentazione](#Presentazione)
  - [Funzioni utilizzate](#Funzioni-utilizzate)
  - [File](#File)
+ - [Tabella](#Tabella)
  
 ## Introduzione
 L'obbiettivo di questo programma è quello di 
@@ -665,8 +666,127 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
 * **Risultato**  
  Lista `labels` contenete le etichette di tutte le issue fatte da `user`.  
    
+## File  
+### main.py  
+* **Codice**  
+  ```python
+  import datasetRetentionIssue
+  import extractUsers
+  import extractActiveUsers
+  import extractPassiveUsers
+  import extractActiveUsersLabels
 
-## File
+  if __name__ == '__main__':
+
+      datasetRetentionIssue.dataset()
+
+      extractUsers.extract_users()
+
+      extractPassiveUsers.extract_passive_users()
+      extractActiveUsers.extract_active_users()
+      extractActiveUsersLabels.extract_active_users_labels()
+  ```
+### config.py
+* **Codice**  
+  ```python
+  def get_access_token():
+    return "inserisci il tuo personal access token"
+  ```
+### function.py
+* **Codice**  
+  ```python
+  ```
+### datasetRetentionIssue.py  
+* **Codice**  
+  ```python
+  # Librerie
+  from pymongo import MongoClient
+  import function
+
+  def dataset():
+      # Creiamo un oggetto MongoClient per connetterci al database MongoDB
+      client = MongoClient('localhost', 'inserisci numero porta')
+      # Selezioniamo il database 
+      db = client.nome_database
+      # Selezioniamo la collezione 
+      collection = db.nome_collection
+
+      # Definiamo le chiavi che vogliamo estrarre dalla collezione
+      key1 = "html_url"
+      key2 = "repository_url"
+
+      # Eseguiamo una query che seleziona solo le chiavi "html_url" e "repository_url" di tutti i documenti della collezione
+      result = collection.find({}, {"_id" : 0, "html_url" : 1, "repository_url": 1}, batch_size=20)
+
+      # Richiamiamo la funzione create_dataset dal modulo function
+      function.create_dataset(result, key1, key2)
+  ```  
+* **Risultato**
+ Dataset `retentionIssue.csv`.  
+ ### extractUsers.py  
+ * **Codice**  
+  ```python
+  import function
+  import pandas as pd
+
+  def extract_users():
+      # legge il file CSV contenente gli URL delle issue e dei repository associati
+      df = pd.read_csv('Dataset/retentionIssue.csv')
+
+      # itera su ogni riga del dataframe
+      for index, row in df.iterrows():
+          # ottiene il repository come stringa e l'URL dell'issue
+          repo = str(row['repository_url'])
+          html_url = str(row['html_url'])
+
+          # estrae il numero dell'issue e il nome del repository dall'URL dell'issue
+          repository = repo[29:]
+          pr_number = function.extract_pr_numbers(html_url, repository)
+
+          # se l'URL dell'issue contiene un numero di pull request
+          if (pr_number != 0):
+              # estrae il proprietario della pull request
+              pr_owner = function.extract_pr_owner(pr_number, repository)
+
+              # se il proprietario esiste, estrae le informazioni sui commit della pull request
+              if (pr_owner != 0):
+                  function.extract_commit_information(pr_owner, pr_number, repository, html_url)
+
+  ```  
+  * **Risultato**  
+    Dataset `user.csv`.
+ ### extractPassiveUsers.py
+ * **Codice**  
+  ```python
+  #Librerie
+  import pandas as pd
+  import function
+
+  # Funzione per estrarre gli utenti passivi dal dataset
+  def extract_passive_users():
+      # Legge il file csv contenente le informazioni sugli utenti
+      df = pd.read_csv('Dataset/users.csv')
+
+      # Itera sul dataframe per estrarre le informazioni di ciascun utente
+      for index, row in df.iterrows():
+          html_url = str(row['html_url'])  # URL del profilo GitHub dell'utente
+          user = str(row['name'])  # Nome dell'utente
+          
+          # Chiama la funzione per estrarre le informazioni sulla singola issue
+          function.extract_single_issue()
+  ```  
+  * **Risultato**  
+   File `passiveUsers.txt`
+ ### extractActiveUsers.py
+ * **Codice**  
+  ```python
+  ```
+ ### extractActiveUsersLabels.py
+ * **Codice**  
+  ```python
+  ```
+
+## Tabella
 | **Nome File** | **Quantità** |
 |-----------|---------|
 | retentionIssue.csv | 354648 |  
@@ -675,6 +795,3 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
 | users1.csv | 11158 |
 | ActiveUsers.json|  2593  | 
 | ActiveUseresLabels.json |  2593  | 
-
-
-
