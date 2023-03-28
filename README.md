@@ -126,11 +126,41 @@ Il programma utilizzerà le seguenti funzioni:
   * `html_url` : url della issue
   * `repository` : nome intero della repository dove è presente la issue
 * **Codice**  
-Faccio una richiesta HTTP all'URL specificato dalla variabile `html_url`  
+La funzione cerca di estrarre il numero della pull request da una pagina HTML di Github e restituisce 0 se non riesce a trovarlo o se si verifica un errore nella richiesta HTTP  
   ```python
-  response = requests.get(html_url)
+  pr_number = 0  # Inizializza la variabile "pr_number" a 0.
+  response = requests.get(html_url)  # Esegue una richiesta HTTP GET all'URL specificato dalla variabile "html_url" utilizzando la libreria "requests".
+  try:  # Verifica se la richiesta è andata a buon fine utilizzando la funzione "raise_for_status()". Se si, il codice continua a eseguire, altrimenti "pr_number" viene impostato a 0.
+    response.raise_for_status()
+    soup = BeautifulSoup(response.text, 'html.parser')  # Utilizza la libreria "BeautifulSoup" per analizzare l'HTML della pagina ricevuta dalla richiesta.
+    url = "https://github.com/" + repository + "/pull"  # Crea una stringa di base dell'URL della pull request utilizzando la variabile "repository".
+    tags = soup.find_all("a")  # Trova tutti i tag "a" nell'HTML della pagina.
+    for tag in tags:  # Scansiona tutti i tag "a" e cerca un tag che abbia un attributo "href" che contenga l'URL della pull request. Se lo trova, memorizza la stringa contenente il numero della pull request (che potrebbe essere nel formato "#1" o "pull/1") nella variabile "number_string".
+        link = str(tag.get('href'))
+        if url in link:
+            number_string = tag.string
+            if (number_string):  # Se "number_string" non è vuota e inizia con il carattere "#", estrae il numero della pull request come una stringa e lo converte in un intero. Imposta la variabile "pr_number" con questo valore e termina il ciclo "for".
+                if (number_string[0] == '#'):
+                    try:
+                        pr_number = int(number_string[1:])
+                        break
+                    except ValueError:
+                        pr_number = 0
+                        break
+                else:  # Se "number_string" è vuota, non inizia con il carattere "#" o non può essere convertita in un intero, imposta "pr_number" a 0 e termina il ciclo "for".
+                    pr_number = 0
+            else:
+                pr_number = 0
+    # Se non viene trovato alcun tag "a" con l'URL della pull request, imposta "pr_number" a 0.
+    if pr_number == 0:
+        pr_number = 0
+  except requests.exceptions.HTTPError:  # Se la richiesta HTTP non va a buon fine (ad esempio, se la pagina non esiste o se il server restituisce un errore), imposta "pr_number" a 0.
+    pr_number = 0
+  # Restituisce "pr_number".
+  return pr_number
   ```
-  Prova
+ * **Risultato**  
+  Variabile `pr_number` contente il numero della pull request che chiude la issue.
 ### `extract_pr_owner`
 ### `extract_commit_information`
 ### `extract_single_issue`
