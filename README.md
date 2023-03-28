@@ -667,6 +667,17 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
  Lista `labels` contenete le etichette di tutte le issue fatte da `user`.  
    
 ## File  
+Il programma è costituito dai seguenti file:
+ - [main.py](#main.py)
+ - [config.py](#config.py)
+ - [function.py](#function.py)
+ - [datasetRetentionIssue.py](#datasetRetentionIssue.py)
+ - [extractUsers.py](#extractUsers.py)
+ - [extractPassiveUsers.py](#extractPassiveUsers.py)
+ - [extractActiveUsers.py](#extractActiveUsers.py)
+ - [extractActiveUsersLabels.py](#extractActiveUsersLabels.py)  
+
+
 ### main.py  
 * **Codice**  
   ```python
