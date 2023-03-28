@@ -780,11 +780,81 @@ La funzione cerca di estrarre il numero della pull request da una pagina HTML di
  ### extractActiveUsers.py
  * **Codice**  
   ```python
-  ```
+  #Librerie
+  import json
+  import pandas as pd
+  import function
+
+  def extract_active_users():
+      # lista che conterrà le informazioni sulle issue degli utenti attivi
+      issue_list = []
+
+      # lettura del dataset contenente i dati degli utenti
+      df = pd.read_csv('Dataset/users1.csv')
+
+      # ciclo su ogni riga del dataset
+      for index, row in df.iterrows():
+          # estrazione dell'html_url e del nome dell'utente
+          html_url = str(row['html_url'])
+          user = str(row['name'])
+
+          # estrazione dei pr associati all'utente
+          prs = function.extract_prs(html_url, user)
+
+          # estrazione delle issue associate ai pr
+          issues = function.extract_issues(html_url, user, prs)
+
+          # rimozione delle eventuali issue duplicate
+          issues = issues[:]
+          unique_list = []
+          for i in issues:
+              if i not in unique_list:
+                  unique_list.append(i)
+
+          # se l'utente ha almeno una issue unica, aggiungi le informazioni alla lista di output
+          if (len(unique_list) > 1):
+              issue_dict = {"id" : user, "issues" : unique_list}
+              issue_list.append(issue_dict)
+
+      # scrittura del risultato su un file JSON
+      with open('ActiveUsers.json', 'w') as fp:
+          json.dump(issue_list, fp)
+
+  ```  
+  * **Risultato**
+   File JSON `ActiveUseres.json`
  ### extractActiveUsersLabels.py
  * **Codice**  
   ```python
-  ```
+  #Librerie
+  import json
+  import function
+
+  def extract_active_users_labels():
+      # Apri il file JSON contenente l'elenco degli utenti attivi e le relative issues
+      with open('ActiveUsers.json', 'r') as f:
+          data = json.load(f)
+
+      dictionaries = []
+      # Itera su ogni dizionario dell'elenco per ottenere le label associate alle issues di ogni utente
+      for dizionario in data:
+          labels_list = []
+          user = dizionario['id']
+          issues = dizionario['issues']
+          for i in issues:
+              # Estrai le label dalle issues utilizzando una funzione di supporto
+              labels = function.extract_labels(i)
+              labels_list.append(labels)
+          # Costruisci un dizionario contenente l'utente e le sue label e aggiungilo alla lista di dizionari
+          labels_dict = {"id" : user, "labels" : labels_list}
+          dictionaries.append(labels_dict)
+      # Salva la lista di dizionari in un nuovo file JSON
+      with open('ActiveUsersLabels.json', 'w') as fp:
+          json.dump(dictionaries, fp)
+  
+  ```  
+  * **Risultato**
+   File JSON `ActiveUseresLabels.json`
 
 ## Tabella
 | **Nome File** | **Quantità** |
