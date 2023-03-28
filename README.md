@@ -121,7 +121,16 @@ Il programma utilizzerà le seguenti funzioni:
 * **Risultato**  
    Dataset `retentionIssue.csv`
       
-### `extract_pr_numbers`
+### `extract_pr_numbers`  
+* **Parametri**
+  * `html_url` : url della issue
+  * `repository` : nome intero della repository dove è presente la issue
+* **Codice**  
+Faccio una richiesta HTTP all'URL specificato dalla variabile `html_url`  
+  ```python
+  response = requests.get(html_url)
+  ```
+  Prova
 ### `extract_pr_owner`
 ### `extract_commit_information`
 ### `extract_single_issue`
@@ -131,7 +140,7 @@ Il programma utilizzerà le seguenti funzioni:
 
 
 ## File
-| Nome File | Quantità |
+| **Nome File** | **Quantità** |
 |-----------|---------|
 | retentionIssue.csv | 354648 |  
 | users.csv | 11167 |
