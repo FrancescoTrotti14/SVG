@@ -11,7 +11,8 @@ a cura di: **Trotti Francesco [703010]**
  - [Tabella](#Tabella)
  
 ## Introduzione
-L'obbiettivo di questo programma è quello di 
+L'obbiettivo di questo programma è quello di non far andar via un utente da una repository dopo che ha svolto la prima issue.  
+Infatti questo programma riesce, partendo dalla prima issue svolta, a trovare una successiva issue simile a quella svolta dall'utente. Così facendo l'utente non abbandonerà la repository.  
  
 ## Requisiti fondamentali
 Programma realizzato con il linguaggio di programmazione Python. Per eseguire il codice si rchiede un ambiente di sviluppo (ambiente di sviluppo suggerito: Visual Studio Code)  
@@ -60,18 +61,18 @@ Quindi per ciascuna issue bisognerà:
   Il dataset `users.csv` conterrà in **name** il nome dell'utente e in **html_url** l'url della prima issue svolta nella repository.
   
 * **Estrazione utenti attivi**: L'obbiettivo di questa fase è quello di estrarre gli utenti che hanno svolto almeno un'altra issue all'interno della repository.  
-Il programma eliminerà dal dataset `users.csv` gli utenti che hanno svolto una sola issue nella repository, creando il dataset `users1.csv` che conterrà i probabili utenti che hanno svolta più di una issue.  
-Per creare il dataset `users1.csv` per ciascun utente bisognerà:    
+Il programma eliminerà dal dataset `users.csv` gli utenti che hanno svolto una sola issue nella repository, creando il dataset `usersActive.csv` che conterrà i probabili utenti che hanno svolta più di una issue.  
+Per creare il dataset `usersActive.csv` per ciascun utente bisognerà:    
   *  Trovare **tutti i commit** fatti dall'utente nella repository;
   *  Trovare il numero di **commit** fatti dall'utente nella pull request che chiude la issue del dataset;
   *  Fare un confronto tra i commit nell'intera repository e i commit nella pull request;
   *  Se il numero di commit nell'intera repository corrisponde al numero di commit nella pull request significa che l'utente ha svolto una sola issue;
   *  L'utente viene inserito nel file `passiveUsers.txt`
-  *  Viene creato il dataset `users1.csv` sottraendo dal dataset `users.csv` gli utenti presenti nel file `passiveUsers.txt`;  
+  *  Viene creato il dataset `usersActive.csv` sottraendo dal dataset `users.csv` gli utenti presenti nel file `passiveUsers.txt`;  
 
   Tutto questo grazie alla funzione `extract_single_issue()`;
-  Una volta creato il dataset `users1.csv` viene chiamata la funzione `extract_issue()`.  
-  In questa funzione vengono analizzati tutti gli utenti del dataset `users1.csv`.  
+  Una volta creato il dataset `usersActive.csv` viene chiamata la funzione `extract_issue()`.  
+  In questa funzione vengono analizzati tutti gli utenti del dataset `usersActive.csv`.  
   Per ciascun utente:  
     *  Ci si ricava i **commenti** in ciascun commit fatto dall'utente;  
     *  Dai commenti si ricavano le **pull request** che chiudone le issue svolte dall'utente grazie alla funzione `extract_prs()`;
@@ -800,7 +801,7 @@ Il programma è costituito dai seguenti file:
       issue_list = []
 
       # lettura del dataset contenente i dati degli utenti
-      df = pd.read_csv('Dataset/users1.csv')
+      df = pd.read_csv('Dataset/usersActive.csv')
 
       # ciclo su ogni riga del dataset
       for index, row in df.iterrows():
@@ -872,6 +873,6 @@ Il programma è costituito dai seguenti file:
 | retentionIssue.csv | 354648 |  
 | users.csv | 11167 |
 | passiveUsers.txt | 9 |
-| users1.csv | 11158 |
+| usersActive.csv | 11158 |
 | ActiveUsers.json|  2593  | 
 | ActiveUseresLabels.json |  2593  | 
