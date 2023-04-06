@@ -40,6 +40,18 @@ Una volta installate le librerie eseguire il file `main.py`.
    * **`extract_repository(html_url)`**: dato l'url della issue restituisce tramite le espressioni regolari il nome completo della repository;
    * **`extract_number(html_url)`**: dato l'url della issue restituisce tramite le espressioni regolari il numero della issue;  
 ### **`datasetRetentionIssue.py`**  
+  Il primo passo da fare è scaricare ***MongoDB*** cliccando sul [link](https://www.mongodb.com/try/download/community).  
+Una volta scaricato bisogna stabilire una connessione (di default: *mongodb://localhost:27017*)  
+Stabilita la connessione bisognerà:  
+  * Cliccare sul tasto "**+**" alla destra della scritta **Databases**;    
+  * Inserire il **Database name** e il **Collection name** e poi cliccare il tasto **Create Database**;    
+  * Andare sulla collezione appena creata e cliccare il tasto **Import Data**;    
+  * Selezionare il file JSON **DB** presente nella cartella **Database** e cliccare il tasto **JSON**;   
+  * Cliccare il tasto **Import**;
+
+  Adesso il Database è correttamente importato su **MongoDB**.  
+  Fatto questo viene stabilita una connessione al database.  
+  Viene creata la variabile `result`
   
 
 ## Tabella
