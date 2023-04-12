@@ -39,7 +39,7 @@ Una volta installate le librerie eseguire il file `main.py`.
  
 ### **`utilities.py`**   
   Contiene delle funzioni basilari:  
-   * **`get_access_token()`**: restituisce il *personal access token*;
+   * **[`get_access_token()`](#get_access_token())**: restituisce il *personal access token*;
    * **`extract_owner(html_url)`**: dato l'url della issue restituisce tramite le espressioni regolari il proprietario della repository;
    * **`extract_name(html_url)`**: dato l'url della issue restituisce tramite le espressioni regolari il nome della repository;
    * **`extract_repository(html_url)`**: dato l'url della issue restituisce tramite le espressioni regolari il nome completo della repository;
@@ -59,13 +59,14 @@ Stabilita la connessione bisognerà:
   Viene creata la variabile `result`  
 ### **extractUser.py**  
   Viene iterato il dataset `retentionnIssue.csv` e per ogni issue presente nel database si ricava:  
-    -  proprietario della repository con `utilities.extract_owner(html_url)` ;    
-    -  nome della repository con `utilities.extract_name(html_url)`;  
-    -  numero della issue con `utilities.extract_number(html_url)`;  
-    -  nome completo della repository ;  
+   * proprietario della repository con `utilities.extract_owner(html_url)` ;    
+   * nome della repository con `utilities.extract_name(html_url)`;  
+   * numero della issue con `utilities.extract_number(html_url)`;  
+   * nome completo della repository ;  
   
 
-  
+## Funzioni Utilizzate
+### `get_access_token()`
 
 ## Tabella
 | **Nome File** | **Quantità** |
