@@ -39,7 +39,7 @@ Una volta installate le librerie eseguire il file `main.py`.
  
 ### **`utilities.py`**   
   Contiene delle funzioni basilari:  
-   * **[`get_access_token()`](#getaccesstoken())**: restituisce il *personal access token*;
+   * **[`get_access_token()`](#get_access_token)**: restituisce il *personal access token*;
    * **`extract_owner(html_url)`**: dato l'url della issue restituisce tramite le espressioni regolari il proprietario della repository;
    * **`extract_name(html_url)`**: dato l'url della issue restituisce tramite le espressioni regolari il nome della repository;
    * **`extract_repository(html_url)`**: dato l'url della issue restituisce tramite le espressioni regolari il nome completo della repository;
