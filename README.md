@@ -33,9 +33,9 @@ Una volta installate le librerie eseguire il file `main.py`.
  
 ## File  
  **Indice**  
- - [utilities.py](#utilities.py)
- - [datasetRetentionIssue.py](#datasetRetentionIssue.py)
- - [extractUser.py](#extractUser.py)
+ - [utilities.py](#utilitiespy)
+ - [datasetRetentionIssue.py](#datasetRetentionIssuepy)
+ - [extractUser.py](#extractUserpy)
  
 ### **`utilities.py`**   
   Contiene delle funzioni basilari:  
