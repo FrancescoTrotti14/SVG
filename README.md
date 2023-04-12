@@ -31,7 +31,12 @@ oppure
 `python -m pip install <nome libreria>` sul terminale. 
 Una volta installate le librerie eseguire il file `main.py`.
  
-## File
+## File  
+ **Indice**  
+ - [utilities.py](#utilities.py)
+ - [datasetRetentionIssue.py](#datasetRetentionIssue.py)
+ - [extractUser.py](#extractUser.py)
+ 
 ### **`utilities.py`**   
   Contiene delle funzioni basilari:  
    * **`get_access_token()`**: restituisce il *personal access token*;
@@ -51,7 +56,15 @@ Stabilita la connessione bisognerà:
 
   Adesso il Database è correttamente importato su **MongoDB**.  
   Fatto questo viene stabilita una connessione al database.  
-  Viene creata la variabile `result`
+  Viene creata la variabile `result`  
+### **extractUser.py**  
+  Viene iterato il dataset `retentionnIssue.csv` e per ogni issue presente nel database si ricava:  
+    -  proprietario della repository con `utilities.extract_owner(html_url)` ;    
+    -  nome della repository con `utilities.extract_name(html_url)`;  
+    -  numero della issue con `utilities.extract_number(html_url)`;  
+    -  nome completo della repository ;  
+  
+
   
 
 ## Tabella
