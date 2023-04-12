@@ -40,10 +40,10 @@ Una volta installate le librerie eseguire il file `main.py`.
 ### **`utilities.py`**   
   Contiene delle funzioni basilari:  
    * **[`get_access_token()`](#get_access_token)**: restituisce il *personal access token*;
-   * **`extract_owner(html_url)`**: dato l'url della issue restituisce tramite le espressioni regolari il proprietario della repository;
-   * **`extract_name(html_url)`**: dato l'url della issue restituisce tramite le espressioni regolari il nome della repository;
-   * **`extract_repository(html_url)`**: dato l'url della issue restituisce tramite le espressioni regolari il nome completo della repository;
-   * **`extract_number(html_url)`**: dato l'url della issue restituisce tramite le espressioni regolari il numero della issue;  
+   * **[`extract_owner(html_url)`](#extract_ownerhtml_url)**: dato l'url della issue restituisce tramite le espressioni regolari il proprietario della repository;
+   * **[`extract_name(html_url)`](#extract_namehtml_url)**: dato l'url della issue restituisce tramite le espressioni regolari il nome della repository;
+   * **[`extract_repository(html_url)`](#extract_repositoryhtml_url)**: dato l'url della issue restituisce tramite le espressioni regolari il nome completo della repository;
+   * **[`extract_number(html_url)`](#extract_numberhtml_url)**: dato l'url della issue restituisce tramite le espressioni regolari il numero della issue;  
 ### **`datasetRetentionIssue.py`**  
   Il primo passo da fare è scaricare ***MongoDB*** cliccando sul [link](https://www.mongodb.com/try/download/community).  
 Una volta scaricato bisogna stabilire una connessione (di default: *mongodb://localhost:27017*)  
