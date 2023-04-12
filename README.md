@@ -67,6 +67,10 @@ Stabilita la connessione bisognerà:
 
 ## Funzioni Utilizzate
 ### `get_access_token()`
+### `extract_owner(html_url)`
+### `extract_name(html_url)`
+### `extract_repository(html_url)`
+### `extract_number(html_url)`
 
 ## Tabella
 | **Nome File** | **Quantità** |
