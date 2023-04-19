@@ -35,7 +35,7 @@ Una volta installate le librerie eseguire il file `main.py`.
  - [utilities.py](#utilitiespy)
  - [datasetRetentionIssue.py](#datasetretentionissuepy)
  - [extractUser.py](#extractuserpy)
- - [extractActiveUsers.py](#extractactuveuserspy)
+ - [extractActiveUsers.py](#extractactiveuserspy)
  
 ### **`utilities.py`**   
   Contiene delle funzioni basilari:  
