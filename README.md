@@ -36,6 +36,7 @@ Una volta installate le librerie eseguire il file `main.py`.
  - [datasetRetentionIssue.py](#datasetretentionissuepy)
  - [extractUser.py](#extractuserpy)
  - [extractActiveUsers.py](#extractactiveuserspy)
+ - [one_year_issue.py](#one_year_issuepy)
  
 ### **`utilities.py`**   
   Contiene delle funzioni basilari:  
@@ -43,7 +44,7 @@ Una volta installate le librerie eseguire il file `main.py`.
    * **[`extract_owner(html_url)`](#extract_owner)**: dato l'url della issue restituisce tramite le espressioni regolari il proprietario della repository;
    * **[`extract_name(html_url)`](#extract_name)**: dato l'url della issue restituisce tramite le espressioni regolari il nome della repository;
    * **[`extract_repository(html_url)`](#extract_repository)**: dato l'url della issue restituisce tramite le espressioni regolari il nome completo della repository;
-   * **[`extract_number(html_url)`](#extract_numberh)**: dato l'url della issue restituisce tramite le espressioni regolari il numero della issue;  
+   * **[`extract_number(html_url)`](#extract_number)**: dato l'url della issue restituisce tramite le espressioni regolari il numero della issue;  
 ### **`datasetRetentionIssue.py`**  
   Il primo passo da fare è scaricare ***MongoDB*** cliccando sul [link](https://www.mongodb.com/try/download/community).  
 Una volta scaricato bisogna stabilire una connessione (di default: *mongodb://localhost:27017*)  
@@ -69,6 +70,15 @@ Stabilita la connessione bisognerà:
  Se la variabile `prs_list` non è vuota: per ogni pull request in `prs_list` viene estratto il proprietario della pull request con la funzione [`extract_pr_owner(repository)`](#extract_pr_owner) e inserito nella variabile `pr_owner`.  
  Se la variabile `pr_owner` non è vuota viene chiamata la funzione [`extract_first_issue(repository, pr_owner, pr, issue_url)`](#extract_first_issue) che costruirà il dataset `users.csv` contente il nome e l'url della prima issue fatta nella repository.  
 ### **extractActiveUsers.py**
+ Viene iterato il dataset `users.csv` e per ciascun utente si ricava: 
+  * `user` = nome dell'utente;
+  * `issue_url` = url della prima issue fatta dall'utente;
+  * `repository` = nome della repository;  
+
+ nella variabile `prs` con la funzione [`extract_prs(user, repository)`](#extract_prs) vengono salvate tutte le pull request fatte dall'utente;  
+ nella variabile `issues` con la funzione [`extract_issues(user, repository, issue_url, prs)`](#extract_issues) vengono salvate tutte le issue fatte dall'utente;  
+ se il numero delle issue è maggiore di 1: l'utente verrà salvato nel file `activeUsers.json` con *id* = nome dell'utente e *issues* = lista di tutte le issue fatte dall'utente.  
+### **one_year_issue.py**
   
 
 ## Funzioni Utilizzate
@@ -81,6 +91,10 @@ Stabilita la connessione bisognerà:
 ### `extract_prs_list()`
 ### `extract_pr_owner()`
 ### `extract_first_issue()`
+### `extract_prs()`
+### `extract_issues()`
+
+## Cartelle
 
 ## Tabella
 | **Nome File** | **Quantità** |
