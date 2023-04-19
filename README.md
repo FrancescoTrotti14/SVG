@@ -6,7 +6,6 @@ Progetto per la tesi: **Creazione di un bot per i neo contributori di progetti o
  - [Requisiti fondamentali](#Requisiti-fondamentali)
  - [File](#File)
  - [Funzioni utilizzate](#Funzioni-utilizzate)
- - [Cartelle](#cartelle)
  - [Tabella](#Tabella)
  
 ## Introduzione
@@ -101,21 +100,135 @@ Stabilita la connessione bisognerà:
   
 ## Funzioni Utilizzate
 ### `get_access_token()`
+* **Risultato**  
 Restituisce il *personal access token* utile per l'accesso su Github.
 ### `extract_owner()`
-**Parametri**  
+* **Parametri**  
+  * `html_url` = url della issue
+* **Funzione**  
+Con le espressioni regolari si ricava il proprietario della repository.
+* **Risultato**  
+`owner` = proprietario della repository.
 ### `extract_name()`
+* **Parametri**  
+  * `html_url` = url della issue
+* **Funzione**  
+Con le espressioni regolari si ricava il nome della repository.
+* **Risultato**  
+`name` = nome della repository.
 ### `extract_repository()`
+* **Parametri**  
+  * `html_url` = url della issue
+* **Funzione**  
+Con le espressioni regolari si ricava il nome completo della repository.
+* **Risultato**  
+`repository` = nome completo della repository.
 ### `extract_number()`
+* **Parametri**  
+  * `html_url` = url della issue
+* **Funzione**  
+Con le espressioni regolari si ricava il numero della issue.
+* **Risultato**  
+`number` = numero della issue.
 ### `create_dataset()`
+* **Parametri**  
+  * `result` = url di tutte le good first issue
+* **Funzione**  
+Viene creato un DataFrame vuoto chiamato `df_project`.  
+Per ogni issue presente nella lista `result`:  
+  - Aggiunge una nuova riga al DataFrame `df_project` con l'url della issue.  
+  
+  Esporta il DataFrame in un file CSV chiamato `retentionIssues.csv`
+* **Risultato**  
+`retentionIssues.csv` = file CSV contente l'url di tutte le good first issue.
 ### `extract_prs_list()`
+* **Parametri**  
+  * `owner` = proprietario della repository;
+  * `name` = nome della repository;
+  * `numebr` = numero della issue;
+* **Funzione**  
+Viene stabilita la query con le GraphQL che si ricava le pull request associate alla issue.  
+Viene definito il dizionario delle intestazioni per la richiesta API.  
+Viene eseguita la richiesta API GraphQL.  
+Se il codice della risposta è 200 (risposta affermativa) vengono salvate nella variabile `prs_list` tutte le pull request associate alla issue.
+* **Risultato**  
+`prs_list` = tutte le pull request associate alla issue.
 ### `extract_pr_owner()`
+* **Parametri**  
+  * `repository` = nome completo della repository;
+  * `pr` = numero della pull request;
+* **Funzione**  
+Fa l'accesso a GitHub con il personal access token.  
+Recupera l'oggetto Repository corrispondente al nome fornito.  
+Recupera l'oggetto PullRequest corrispondente al numero fornito.
+Recupera il proprietario della PullRequest e lo inserisce nella variabile `pr_owner`.
+* **Risultato**  
+`pr_owner` = proprietario della PullRequest.
 ### `extract_first_issue()`
+* **Parametri**  
+  * `repository` = nome completo della repository;
+  * `pr_owner` = proprietario della PullRequest;
+  * `pr` = numero della PullRequest;
+  * `issue_url` = url della issue;
+* **Funzione**  
+Recupera l'oggetto Repository corrispondente al nome fornito.
+Ricava tutti i commit del `pr_owner` nella Repository.  
+Ottiene il primo commit del `pr_owner` nella Repository.  
+Ricava la PullRequest associata al primo commit.  
+Estrae l'URL della prima PullRequest trovata (se presente).
+Controlla se il numero della PullRequest corrisponde a `pr`.  
+Se corrispondono:  
+Lettura del file CSV contenente i dati degli utenti e creazione di un DataFrame.  
+Aggiunta delle informazioni dell'autore al DataFrame.  
+Scrittura del DataFrame nel file CSV `users.csv`.
+* **Risultato**  
+`users.csv` = file contente nome e url della prima issue degli utenti che come prima issue nella Repository hanno fatto la good first issue.
 ### `extract_prs()`
+* **Parametri**  
+  * `user` = nome dell'utente;
+  * `repository` = nome completo della repository;
+* **Funzione**  
+Recupera l'oggetto Repository corrispondente al nome fornito.  
+Ricava tutti i commit di `user` nella Repository.  
+Per ogni commit ricava la PullRequest associata.  
+Inserisci tutte le PullRequest nella lista `prs`.
+* **Risultato**  
+`prs` = lista di tutte le PullRequest di `user`.
 ### `extract_issues()`
+* **Parametri**  
+  * `user` = nome dell'utente;
+  * `repository` = nome completo della repository;
+  * `prs` = lista di tutte le PullRequest di `user`;
+* **Funzione**  
+Recupera l'oggetto Repository corrispondente al nome fornito.  
+Per ogni numero di  PullRequest in `prs`:  
+Recupera l'oggetto PullRequest corrispondente al numero fornito.  
+Controlla se l'autore della PullRequest corrisponde a `user`.  
+Costruisce l'URL della pagina della PullRequest.  
+Facciamo una richiesta HTTP per la pagina del pull request.  
+Analizziamo il contenuto HTML della pagina del pull request con BeautifulSoup.  
+Estraiamo parte dell'URL delle issue dal repository.  
+Troviamo tutti i tag "a" nella pagina HTML della PullRequest.  
+Per ogni tag "a" estraiamo il link presente nell'href.  
+Se il link corrisponde al link di una issue salviamo il numero della issue. 
+Recupera l'oggetto Issue corrispondente al numero appena trovato.
+Inesrisci tutti gli url delle issue nella lista `issue_list`.
+* **Risultato**  
+`issue_list` = url di tutte le issue fatte da `user`.
 ### `extract_repo_issues()`
-
-## Cartelle
+* **Parametri**  
+  * `repository` = nome completo della repository;
+  * `numer` = numero della issue;
+* **Funzione**  
+Recupera l'oggetto Repository corrispondente al nome fornito.
+Recupera l'oggetto Issue corrispondente al numero fornito.
+Estrae la data di chiusura della Issue e la salva nella variabile `data_inizio`.  
+Calcola un delta pari a 365 giorni.  
+Calcola `data_fine` aggiungendo a `data_inizio` il delta.  
+Ricava tutte le issue della repository a partire dalla `data_inizio` fino alla `data_fine`.  
+Salva queste issue nella variabile `issue_repo`.
+* **Risultato**  
+`issue_repo` = issue della repository a partire dalla `data_inizio` fino alla `data_fine`.
 
 ## Tabella
 | **Nome File** | **Quantità** |
