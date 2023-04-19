@@ -1,13 +1,12 @@
 # retention-issues
-Progetto per la tesi: **Creazione di un bot per i neo contributori di progetti open source in Github**  
-a cura di: **Trotti Francesco [703010]**  
+Progetto per la tesi: **Creazione di un bot per i neo contributori di progetti open source in Github**   
 
 ## Indice
  - [Introduzione](#Introduzione)
  - [Requisiti fondamentali](#Requisiti-fondamentali)
- - [Presentazione](#Presentazione)
- - [Funzioni utilizzate](#Funzioni-utilizzate)
  - [File](#File)
+ - [Funzioni utilizzate](#Funzioni-utilizzate)
+ - [Cartelle](#cartelle)
  - [Tabella](#Tabella)
  
 ## Introduzione
@@ -34,16 +33,17 @@ Una volta installate le librerie eseguire il file `main.py`.
 ## File  
  **Indice**  
  - [utilities.py](#utilitiespy)
- - [datasetRetentionIssue.py](#datasetRetentionIssuepy)
- - [extractUser.py](#extractUserpy)
+ - [datasetRetentionIssue.py](#datasetretentionissuepy)
+ - [extractUser.py](#extractuserpy)
+ - [extractActiveUsers.py](#extractactuveuserspy)
  
 ### **`utilities.py`**   
   Contiene delle funzioni basilari:  
    * **[`get_access_token()`](#get_access_token)**: restituisce il *personal access token*;
-   * **[`extract_owner(html_url)`](#extract_ownerhtml_url)**: dato l'url della issue restituisce tramite le espressioni regolari il proprietario della repository;
-   * **[`extract_name(html_url)`](#extract_namehtml_url)**: dato l'url della issue restituisce tramite le espressioni regolari il nome della repository;
-   * **[`extract_repository(html_url)`](#extract_repositoryhtml_url)**: dato l'url della issue restituisce tramite le espressioni regolari il nome completo della repository;
-   * **[`extract_number(html_url)`](#extract_numberhtml_url)**: dato l'url della issue restituisce tramite le espressioni regolari il numero della issue;  
+   * **[`extract_owner(html_url)`](#extract_owner)**: dato l'url della issue restituisce tramite le espressioni regolari il proprietario della repository;
+   * **[`extract_name(html_url)`](#extract_name)**: dato l'url della issue restituisce tramite le espressioni regolari il nome della repository;
+   * **[`extract_repository(html_url)`](#extract_repository)**: dato l'url della issue restituisce tramite le espressioni regolari il nome completo della repository;
+   * **[`extract_number(html_url)`](#extract_numberh)**: dato l'url della issue restituisce tramite le espressioni regolari il numero della issue;  
 ### **`datasetRetentionIssue.py`**  
   Il primo passo da fare è scaricare ***MongoDB*** cliccando sul [link](https://www.mongodb.com/try/download/community).  
 Una volta scaricato bisogna stabilire una connessione (di default: *mongodb://localhost:27017*)  
@@ -56,28 +56,35 @@ Stabilita la connessione bisognerà:
 
   Adesso il Database è correttamente importato su **MongoDB**.  
   Fatto questo viene stabilita una connessione al database.  
-  Viene creata la variabile `result`  
+  Viene creata la variabile `result` contente l'url di ciascuna issue presente nel database.  
+  Viene chiamata la funzione [`create_dataset(result)`](#create_dataset) che crea il file `retentionIssue.csv` contente l'url di ciascuna issue presente nel database.
 ### **extractUser.py**  
   Viene iterato il dataset `retentionnIssue.csv` e per ogni issue presente nel database si ricava:  
-   * proprietario della repository con `utilities.extract_owner(html_url)` ;    
-   * nome della repository con `utilities.extract_name(html_url)`;  
-   * numero della issue con `utilities.extract_number(html_url)`;  
-   * nome completo della repository ;  
+   * proprietario della repository con [`utilities.extract_owner(html_url)`](#extract_owner) ;    
+   * nome della repository con [`utilities.extract_name(html_url)`](#extract_name);  
+   * numero della issue con [`utilities.extract_number(html_url)`](#extract_number);  
+   * nome completo della repository ;
+
+ Vengono prese tutte le pull request associate alla issue e salvate nella variabile `prs_list` con la funzione [`extract_prs_list(owner, name, number)`](#extract_prs_list).  
+ Se la variabile `prs_list` non è vuota: per ogni pull request in `prs_list` viene estratto il proprietario della pull request con la funzione [`extract_pr_owner(repository)`](#extract_pr_owner) e inserito nella variabile `pr_owner`.  
+ Se la variabile `pr_owner` non è vuota viene chiamata la funzione [`extract_first_issue(repository, pr_owner, pr, issue_url)`](#extract_first_issue) che costruirà il dataset `users.csv` contente il nome e l'url della prima issue fatta nella repository.  
+### **extractActiveUsers.py**
   
 
 ## Funzioni Utilizzate
 ### `get_access_token()`
-### `extract_owner(html_url)`
-### `extract_name(html_url)`
-### `extract_repository(html_url)`
-### `extract_number(html_url)`
+### `extract_owner()`
+### `extract_name()`
+### `extract_repository()`
+### `extract_number()`
+### `create_dataset()`
+### `extract_prs_list()`
+### `extract_pr_owner()`
+### `extract_first_issue()`
 
 ## Tabella
 | **Nome File** | **Quantità** |
 |-----------|---------|
 | retentionIssue.csv | 354648 |  
 | users.csv | 11167 |
-| passiveUsers.txt | 9 |
-| usersActive.csv | 11158 |
-| ActiveUsers.json|  2593  | 
-| ActiveUseresLabels.json |  2593  | 
+| ActiveUsers.json|  4120  |  
