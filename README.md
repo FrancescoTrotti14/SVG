@@ -101,7 +101,9 @@ Stabilita la connessione bisognerà:
   
 ## Funzioni Utilizzate
 ### `get_access_token()`
+Restituisce il *personal access token* utile per l'accesso su Github.
 ### `extract_owner()`
+**Parametri**  
 ### `extract_name()`
 ### `extract_repository()`
 ### `extract_number()`
