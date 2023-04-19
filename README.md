@@ -36,7 +36,7 @@ Una volta installate le librerie eseguire il file `main.py`.
  - [datasetRetentionIssue.py](#datasetretentionissuepy)
  - [extractUser.py](#extractuserpy)
  - [extractActiveUsers.py](#extractactiveuserspy)
- - [one_year_issue.py](#one_year_issuepy)
+ - [oneYearIssue.py](#oneyearissuepy)
  
 ### **`utilities.py`**   
   Contiene delle funzioni basilari:  
@@ -77,10 +77,28 @@ Stabilita la connessione bisognerà:
 
  nella variabile `prs` con la funzione [`extract_prs(user, repository)`](#extract_prs) vengono salvate tutte le pull request fatte dall'utente;  
  nella variabile `issues` con la funzione [`extract_issues(user, repository, issue_url, prs)`](#extract_issues) vengono salvate tutte le issue fatte dall'utente;  
- se il numero delle issue è maggiore di 1: l'utente verrà salvato nel file `activeUsers.json` con *id* = nome dell'utente e *issues* = lista di tutte le issue fatte dall'utente.  
-### **one_year_issue.py**
+ se il numero delle issue è maggiore di 1: l'utente verrà salvato nel file `activeUsers.json` con:  
+  * *id* = nome dell'utente 
+  * *issues* = lista di tutte le issue fatte dall'utente.  
   
-
+### **oneYearIssue.py**
+ Viene iterato il file `activeUsers.json` e per ogni utente si ricava:  
+  * l'url della good first issue messo nella variabile `good_first_issue`;
+  * proprietario della repository con [`utilities.extract_owner(good_first_issue)`](#extract_owner) ;    
+  * nome della repository con [`utilities.extract_name(good_first_issue)`](#extract_name);  
+  * nome completo della repository con [`utilities.extract_repository(good_first_issue)`](#extract_repository);
+  * numero della issue con [`utilities.extract_number(good_first_issue)`](#extract_number); 
+  * tutte le issue fatte dall'utente inserite nella lista `issue_utente`;
+  * tutte le issue della repository dalla data di chiusura della `good_first_issue` fino all'anno successivo;  
+  
+ Le issue della repository sono salvate nella lista `issue_repo` e sono ricavate dalla funzione [`extract_repo_issues(repository, number)`](#extract_repo_issues).  
+ Viene creato il dizionario `user_issues` contenente:
+  * *good-first_issue* = `good_first_issue`;
+  * *retention-issue-candidate* = `issue_utente`;
+  * *issue-di-progetto* = `issue_repo`;  
+  
+ Il dizionario `user_issue` viene salvato nel file `{user}--{owner}.{name}.json`.  
+  
 ## Funzioni Utilizzate
 ### `get_access_token()`
 ### `extract_owner()`
@@ -93,6 +111,7 @@ Stabilita la connessione bisognerà:
 ### `extract_first_issue()`
 ### `extract_prs()`
 ### `extract_issues()`
+### `extract_repo_issues()`
 
 ## Cartelle
 
