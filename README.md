@@ -1,5 +1,5 @@
 # retention-issues
-Progetto per la tesi: **Creazione di un bot per i neo contributori di progetti open source in Github**   
+Progetto per la tesi: **Analisi di retention issue in progetti Open Source in Github**   
 
 ## Indice
  - [Introduzione](#Introduzione)
@@ -19,7 +19,15 @@ Relativamente alle librerie esterne importate, vediamo la necessità di installa
 * `beautifulsoup4`: usato per richiedere la pagina html;
 * `pymongo`: usato per accedere ai database;
 * `pyGithub`: usato per accedere alla informazioni presenti su GitHub;
-* `requests`: usato per creare vari tipi di richieste http;   
+* `requests`: usato per creare vari tipi di richieste http;
+* `tqdm`: usato per vedere la barra di avanzamento durante l'esecuzione di un ciclo;
+* `json`: usato per la manipolazione dei file json;
+* `csv`: usato per la manipolazione dei file csv;
+* `time`: usato per lavorare con la gestione dei tempi;
+* `re`: usato per utilizzare le espressioni regolari;
+* `datetime`: usato per utilizzare le date;
+* `torch`: usato per l'addestramento dei modelli;
+* `openpyxl`: usato per leggere e scrivere file Excel; 
 
 Per installare le librerie eseguire il comando  
 `pip install -r requirements.txt`  
@@ -27,7 +35,17 @@ oppure
 `pip install <nome libreria>` sul terminale.  
 oppure  
 `python -m pip install <nome libreria>` sul terminale. 
-Una volta installate le librerie eseguire il file `main.py`.
+
+Scaricare ***MongoDB*** cliccando sul [link](https://www.mongodb.com/try/download/community).  
+Una volta scaricato bisogna stabilire una connessione (di default: *mongodb://localhost:27017*)  
+Stabilita la connessione bisognerà:  
+  * Cliccare sul tasto "**+**" alla destra della scritta **Databases**;    
+  * Inserire il **Database name** e il **Collection name** e poi cliccare il tasto **Create Database**;    
+  * Andare sulla collezione appena creata e cliccare il tasto **Import Data**;    
+  * Selezionare il file JSON **DB** presente nella cartella **Database** e cliccare il tasto **JSON**;   
+  * Cliccare il tasto **Import**;
+
+  Adesso il Database è correttamente importato su **MongoDB**.  
  
 ## File  
  **Indice**  
@@ -45,29 +63,11 @@ Una volta installate le librerie eseguire il file `main.py`.
    * **[`extract_repository(html_url)`](#extract_repository)**: dato l'url della issue restituisce tramite le espressioni regolari il nome completo della repository;
    * **[`extract_number(html_url)`](#extract_number)**: dato l'url della issue restituisce tramite le espressioni regolari il numero della issue;  
 ### **`datasetRetentionIssue.py`**  
-  Il primo passo da fare è scaricare ***MongoDB*** cliccando sul [link](https://www.mongodb.com/try/download/community).  
-Una volta scaricato bisogna stabilire una connessione (di default: *mongodb://localhost:27017*)  
-Stabilita la connessione bisognerà:  
-  * Cliccare sul tasto "**+**" alla destra della scritta **Databases**;    
-  * Inserire il **Database name** e il **Collection name** e poi cliccare il tasto **Create Database**;    
-  * Andare sulla collezione appena creata e cliccare il tasto **Import Data**;    
-  * Selezionare il file JSON **DB** presente nella cartella **Database** e cliccare il tasto **JSON**;   
-  * Cliccare il tasto **Import**;
-
-  Adesso il Database è correttamente importato su **MongoDB**.  
   Fatto questo viene stabilita una connessione al database.  
   Viene creata la variabile `result` contente l'url di ciascuna issue presente nel database.  
   Viene chiamata la funzione [`create_dataset(result)`](#create_dataset) che crea il file `retentionIssue.csv` contente l'url di ciascuna issue presente nel database.
 ### **extractUser.py**  
-  Viene iterato il dataset `retentionnIssue.csv` e per ogni issue presente nel database si ricava:  
-   * proprietario della repository con [`utilities.extract_owner(html_url)`](#extract_owner) ;    
-   * nome della repository con [`utilities.extract_name(html_url)`](#extract_name);  
-   * numero della issue con [`utilities.extract_number(html_url)`](#extract_number);  
-   * nome completo della repository ;
-
- Vengono prese tutte le pull request associate alla issue e salvate nella variabile `prs_list` con la funzione [`extract_prs_list(owner, name, number)`](#extract_prs_list).  
- Se la variabile `prs_list` non è vuota: per ogni pull request in `prs_list` viene estratto il proprietario della pull request con la funzione [`extract_pr_owner(repository)`](#extract_pr_owner) e inserito nella variabile `pr_owner`.  
- Se la variabile `pr_owner` non è vuota viene chiamata la funzione [`extract_first_issue(repository, pr_owner, pr, issue_url)`](#extract_first_issue) che costruirà il dataset `users.csv` contente il nome e l'url della prima issue fatta nella repository.  
+  Legge il file `Dataset/retentionIssue.csv`
 ### **extractActiveUsers.py**
  Viene iterato il dataset `users.csv` e per ciascun utente si ricava: 
   * `user` = nome dell'utente;
